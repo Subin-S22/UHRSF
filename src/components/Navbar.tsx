@@ -1,6 +1,7 @@
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { GoThreeBars } from "react-icons/go";
+import Image from "next/image";
 
 type Props = {};
 
@@ -56,8 +57,11 @@ function Mobile() {
 function Navbar({}: Props) {
   return (
     <div className="sticky top-0 z-10 flex gap-8 w-full bg-purple-900 shadow-lg p-4">
-      <div className="text-xl text-gray-300 drop-shadow-[1px_1px_2px_white] cursor-pointer">
-        UHRSF
+      <div className="flex">
+        <Image src="/uhrsf_logo.png" width={30} height={30} />
+        <div className="text-xl text-gray-300 font-bold cursor-pointer">
+          UHRSF
+        </div>
       </div>
       <ul className="hidden md:flex flex-1 gap-4">
         {navBarTitle.map((title) => {
