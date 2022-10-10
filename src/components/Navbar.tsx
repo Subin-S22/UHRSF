@@ -62,7 +62,10 @@ function Navbar({}: Props) {
       <ul className="hidden md:flex flex-1 gap-4">
         {navBarTitle.map((title) => {
           return (
-            <li key={title} className="text-white text-lg hover:text-gray-400">
+            <li
+              key={title}
+              className="text-white text-lg hover:text-gray-400 cursor-pointer"
+            >
               {title}
             </li>
           );
