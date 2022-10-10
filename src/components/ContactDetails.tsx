@@ -64,6 +64,10 @@ function ContactDetails({ handleNext }: Props) {
               { value: "chennai", name: "Chennai" },
               { value: "kochi", name: "Kochi" },
             ]}
+            value={props.values.city}
+            onChange={props.handleChange}
+            error={props.touched.city && Boolean(props.errors.city)}
+            helperText={props.touched.city && props.errors.city}
           />
           <_Field
             label="State"
@@ -74,6 +78,10 @@ function ContactDetails({ handleNext }: Props) {
               { value: "kerala", name: "Kerala" },
               { value: "tamilnadu", name: "TamilNadu" },
             ]}
+            value={props.values.state}
+            onChange={props.handleChange}
+            error={props.touched.state && Boolean(props.errors.state)}
+            helperText={props.touched.state && props.errors.state}
           />
           <_Field
             label="Pin Code"
