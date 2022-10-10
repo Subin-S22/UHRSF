@@ -55,7 +55,7 @@ function Mobile() {
 
 function Navbar({}: Props) {
   return (
-    <div className="sticky top-0 flex gap-8 w-full bg-stone-600 shadow-lg p-4">
+    <div className="sticky top-0 z-10 flex gap-8 w-full bg-purple-900 shadow-lg p-4">
       <div className="text-xl text-gray-300 drop-shadow-[1px_1px_2px_white]">
         UHRSF
       </div>

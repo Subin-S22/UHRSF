@@ -1,8 +1,25 @@
-import { Form, Formik } from "formik";
+import {
+  Box,
+  Button,
+  Step,
+  StepConnector,
+  stepConnectorClasses,
+  StepIconProps,
+  StepLabel,
+  Stepper,
+  styled,
+  TextField,
+} from "@mui/material";
+import { Form, Formik, useFormik } from "formik";
+import { AiFillCheckCircle as Check } from "react-icons/ai";
 import type { NextPage } from "next";
-import Head from "next/head";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import ContactDetails from "../src/components/ContactDetails";
+import DocumentsDetails from "../src/components/DocumentsDetails";
+import Layout from "../src/components/Layout";
 import Navbar from "../src/components/Navbar";
+import PersonalDetails from "../src/components/PersonalDetails";
 import _Field from "../src/components/_Field";
 
 const validation = Yup.object().shape({
@@ -13,139 +30,138 @@ const validation = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Required"),
 });
 
-const Home: NextPage = () => {
+const steps = ["Personal Details", "Contact Details", "Documents"];
+
+const QontoConnector = styled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 10,
+    left: "calc(-50% + 16px)",
+    right: "calc(50% + 16px)",
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: "#784af4",
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: "#784af4",
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    borderColor:
+      theme.palette.mode === "dark" ? theme.palette.grey[800] : "#eaeaf0",
+    borderTopWidth: 3,
+    borderRadius: 1,
+  },
+}));
+
+const QontoStepIconRoot = styled("div")<{ ownerState: { active?: boolean } }>(
+  ({ theme, ownerState }) => ({
+    color: theme.palette.mode === "dark" ? theme.palette.grey[700] : "#eaeaf0",
+    display: "flex",
+    height: 22,
+    alignItems: "center",
+    ...(ownerState.active && {
+      color: "#784af4",
+    }),
+    "& .QontoStepIcon-completedIcon": {
+      color: "#784af4",
+      zIndex: 1,
+      fontSize: 18,
+    },
+    "& .QontoStepIcon-circle": {
+      width: 8,
+      height: 8,
+      borderRadius: "50%",
+      backgroundColor: "currentColor",
+    },
+  })
+);
+
+function QontoStepIcon(props: StepIconProps) {
+  const { active, completed, className } = props;
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <QontoStepIconRoot ownerState={{ active }} className={className}>
+      {completed ? (
+        <Check className="QontoStepIcon-completedIcon" />
+      ) : (
+        <div className="QontoStepIcon-circle" />
+      )}
+    </QontoStepIconRoot>
+  );
+}
 
-      <Navbar />
-      <main className="flex w-full flex-1 flex-col items-center justify-center lg:px-20 px-4 md:px-10 text-center">
-        <div className="shadow-xl rounded-md p-4 md:p-8 w-full mt-6">
-          <h1 className="text-xl font-semibold font-roboto underline-offset-4 underline">
-            REGISTRATION FORM FOR UHRSF VOLUNTEER
-          </h1>
-          <Formik
-            initialValues={{ name: "", email: "" }}
-            onSubmit={(values) => console.log(values)}
-            validationSchema={validation}
-          >
-            <Form
-              className=" flex-wrap gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
-             mt-4 max-w-6xl mx-auto"
+const Home: NextPage = () => {
+  const [activeStep, setActiveStep] = useState(0);
+  const [Current, setCurrent] = useState({ p: PersonalDetails });
+  const handleNext = () => {
+    if (activeStep < 2) setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  useEffect(() => {
+    switch (activeStep) {
+      case 0:
+        setCurrent({ p: PersonalDetails });
+        break;
+      case 1:
+        setCurrent({ p: ContactDetails });
+        break;
+      case 2:
+        setCurrent({ p: DocumentsDetails });
+        break;
+      default:
+        setCurrent({ p: PersonalDetails });
+    }
+  }, [activeStep]);
+
+  return (
+    <Layout name="Registration">
+      <div className="flex min-h-screen flex-col items-center justify-center">
+        <Navbar />
+        <main className="flex w-full flex-1 flex-col items-center justify-center bg-gray-300 lg:px-20 px-4 md:px-10 text-center">
+          <div className="shadow-xl rounded-md p-4 md:p-8 w-full mt-6 bg-white m-16">
+            <h1 className="text-xl font-semibold font-roboto underline-offset-4 underline">
+              REGISTRATION FORM FOR UHRSF VOLUNTEER
+            </h1>
+            <Stepper
+              activeStep={activeStep}
+              alternativeLabel
+              className="mt-8"
+              connector={<QontoConnector />}
             >
-              <_Field label="Full Name" name="name" type="text" />
-              <_Field label="Email Address" name="email" type="email" />
-              <_Field label="Phone Number" name="phonenumber" type="tel" />
-              <_Field
-                label="Address"
-                name="address"
-                type="text"
-                as="textarea"
-                className="lg:col-span-3"
-              />
-              <_Field
-                label="Nationality"
-                name="nationality"
-                type="string"
-                className=""
-              />
-              <_Field label="Aadhar Card Number" name="aadhar" type="number" />
-              <_Field
-                label="Upload Aadhar Card Photo"
-                name="aadharphoto"
-                type="file"
-              />
-              <_Field label="PAN Card Number" name="pan" type="string" />
-              <_Field
-                label="Upload PAN Card Photo"
-                name="panphoto"
-                type="file"
-              />
-              <_Field label="Date of Birth" name="dateofbirth" type="date" />
-              <_Field
-                label="Gender"
-                name="gender"
-                as="select"
-                options={[
-                  { value: "male", name: "Male" },
-                  { value: "female", name: "Female" },
-                  { value: "others", name: "Others" },
-                ]}
-              />
-              <_Field
-                label="Blood Group"
-                name="blood"
-                as="select"
-                options={[
-                  { value: "A+", name: "A+" },
-                  { value: "A-", name: "A-" },
-                  { value: "B+", name: "B+" },
-                  { value: "B-", name: "B-" },
-                  { value: "AB+", name: "AB+" },
-                  { value: "AB-", name: "AB-" },
-                  { value: "O+", name: "O+" },
-                  { value: "O-", name: "O-" },
-                ]}
-              />
-              <_Field
-                label="Qualification"
-                name="qualification"
-                as="select"
-                options={[
-                  { value: "BE", name: "B.E" },
-                  { value: "BA", name: "BA" },
-                  { value: "BSc", name: "B.Sc" },
-                ]}
-              />
-              <_Field
-                label="Profession"
-                name="profession"
-                as="select"
-                options={[
-                  { value: "Public sector", name: "Public Sector" },
-                  { value: "Private sector", name: "Private Sector" },
-                  { value: "others", name: "Others" },
-                ]}
-              />
-              <_Field
-                label="State"
-                name="state"
-                as="select"
-                options={[
-                  { value: "karnataka", name: "Karnataka" },
-                  { value: "kerala", name: "Kerala" },
-                  { value: "tamilnadu", name: "TamilNadu" },
-                ]}
-              />
-              <_Field
-                label="City"
-                name="city"
-                as="select"
-                options={[
-                  { value: "bangalore", name: "Bangalore" },
-                  { value: "chennai", name: "Chennai" },
-                  { value: "kochi", name: "Kochi" },
-                ]}
-              />
-              <_Field label="Zip Code" name="zipcode" type="number" />
-              <_Field label="Upload Photo" name="photo" type="file" />
-
-              <button
-                className="btn md:col-span-2 lg:col-span-3 mt-4"
-                type="submit"
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel StepIconComponent={QontoStepIcon}>
+                    {label}
+                  </StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+              <Button
+                color="inherit"
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ mr: 1 }}
               >
-                Save
-              </button>
-            </Form>
-          </Formik>
-        </div>
-      </main>
+                Back
+              </Button>
+              {/* <Button onClick={handleNext}>
+                {activeStep === steps.length - 1 ? "Finish" : "Next"}
+              </Button> */}
+            </Box>
+            <Current.p validation={validation} handleNext={handleNext} />
+          </div>
+        </main>
 
-      <footer className="flex h-24 w-full items-center justify-center border-t"></footer>
-    </div>
+        {/* <footer className="flex h-24 w-full items-center justify-center border-t"></footer> */}
+      </div>
+    </Layout>
   );
 };
 

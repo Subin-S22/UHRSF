@@ -6,8 +6,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
     "@headlessui/react": "^1.7.3",
+    "@mui/material": "^5.10.8",
     "formik": "^2.2.9",
+    "moment": "^2.29.4",
     "next": "latest",
     "react": "18.1.0",
     "react-dom": "18.1.0",

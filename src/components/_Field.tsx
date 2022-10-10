@@ -1,5 +1,6 @@
 import { ErrorMessage, Field } from "formik";
 import React from "react";
+import TextField from "@mui/material/TextField";
 
 interface Options {
   value: string;
@@ -11,32 +12,48 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
   as?: string;
   options?: Options[];
+  error?: boolean | undefined;
+  helperText?: string | false | undefined;
 }
 
-function _Field({ label, options, name, as, className, ...props }: Props) {
+function _Field({
+  label,
+  options,
+  name,
+  as,
+  className,
+  error,
+  helperText,
+  ...props
+}: Props) {
   return (
-    <div className={`flex flex-col items-start ${className} m-1 md:m-2`}>
-      <label htmlFor={name} className="font-roboto text-gray-600">
+    <div className={`flex flex-col items-start ${className}  w-full`}>
+      {/* <label htmlFor={name} className="font-roboto text-gray-600">
         {label}
-      </label>
-      <Field
+      </label> */}
+      <TextField
+        id={name}
         name={name}
-        className={
-          "outline-none rounded-md border-2 border-gray-400 w-full px-2 py-1 focus:border-blue-500 " +
-          `${as === "textarea" ? "h-20" : ""}`
+        className={"w-full"}
+        label={label}
+        type={props.type}
+        variant="outlined"
+        InputLabelProps={
+          props.type === "file" || props.type === "date" ? { shrink: true } : {}
         }
-        as={as}
-        {...props}
-      >
-        {options?.map(({ value, name }) => {
-          return <option value={value}>{name}</option>;
-        })}
-      </Field>
-      <ErrorMessage name={name}>
+        multiline={name === "address"}
+        rows={4}
+        value={props.value}
+        onChange={props.onChange}
+        error={error}
+        helperText={helperText}
+        disabled={props.disabled}
+      ></TextField>
+      {/* <ErrorMessage name={name}>
         {(msg) => (
           <div className="text-red-500 text-[12px] font-roboto">{msg}</div>
         )}
-      </ErrorMessage>
+      </ErrorMessage> */}
     </div>
   );
 }
