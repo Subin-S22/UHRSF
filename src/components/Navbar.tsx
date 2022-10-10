@@ -56,7 +56,7 @@ function Mobile() {
 function Navbar({}: Props) {
   return (
     <div className="sticky top-0 z-10 flex gap-8 w-full bg-purple-900 shadow-lg p-4">
-      <div className="text-xl text-gray-300 drop-shadow-[1px_1px_2px_white]">
+      <div className="text-xl text-gray-300 drop-shadow-[1px_1px_2px_white] cursor-pointer">
         UHRSF
       </div>
       <ul className="hidden md:flex flex-1 gap-4">
